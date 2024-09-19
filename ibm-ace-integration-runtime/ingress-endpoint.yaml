@@ -1,0 +1,127 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: ingress-esb-dev-app-ir
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "4096m"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - dashboard-01-ir-app-http.vn
+  rules:
+  - host: dashboard-01-ir-app-http.vn
+    http:
+      paths:
+      - path: /private/customer/createCustomer/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: esb-dev-app-ir
+            port:
+              number: 7800
+      - path: /private/customer/getCustomerInfo/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: esb-dev-app-ir
+            port:
+              number: 7800
+      - path: /private/deposit/blockAccount/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: esb-dev-app-ir
+            port:
+              number: 7800
+      - path: /private/deposit/getBalance/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: esb-dev-app-ir
+            port:
+              number: 7800
+      - path: /private/deposit/createTransaction/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: esb-dev-app-ir
+            port:
+              number: 7800
+      - path: /private/deposit/getDepositInfo/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: esb-dev-app-ir
+            port:
+              number: 7800
+      - path: /private/account/getAcctInfo/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: esb-dev-app-ir
+            port:
+              number: 7800
+      - path: /private/identity/getUserInfo/v1
+        pathType: Prefix
+        backend:
+          service:
+            name: esb-dev-app-ir
+            port:
+              number: 7800
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    argocd.argoproj.io/secret-type: repository
+  name: infra-repo
+  namespace: argocd
+type: Opaque
+data:
+  name: infra-repo
+  project: infra
+  type: git
+  url: git@github.com:gitops-argocd-production/gitops-prod-infra.git
+  sshPrivateKey: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    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
+    -----END OPENSSH PRIVATE KEY-----
