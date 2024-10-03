@@ -1,0 +1,103 @@
+# Default values for ibm-ace-integration-runtime.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: IMAGE_NAME
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "IMAGE_TAG"
+
+imagePullSecrets:
+- regcred
+
+nameOverride: ""
+fullnameOverride: ""
+
+integrationRuntimeAnnotations: {}
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 1000m
+    memory: 1280Mi
+  requests:
+    cpu: 300m
+    memory: 368Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+  
+  # Behavior for HPA Policies
+
+  # behavior:
+  #   scaleDown:
+  #     stabilizationWindowSeconds: 300
+  #     policies:
+  #     - type: Percent
+  #       value: 100
+  #       periodSeconds: 15
+  #   scaleUp:
+  #     stabilizationWindowSeconds: 0
+  #     policies:
+  #     - type: Percent
+  #       value: 100
+  #       periodSeconds: 15
+
+# Additional volumes on the output Deployment definition.
+volumes: 
+  - name: setdbparms
+    secret:
+      secretName: setdbparms-01-secrets
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: 
+  - mountPath: /home/aceuser/initial-config/setdbparms/
+    name: setdbparms
+
+# Adding ENV for Integration Runtimes
+env:
+  - name: MQSI_OVERRIDE_HOSTNAME
+    value: ace-dev-http.aws-cp4i-dev.apps.com.vn
+  - name: MQSI_OVERRIDE_HTTP_PORT
+    value: "80"
+  - name: TZ
+    value: "Asia/Ho_Chi_Minh"
+
+# Default License for IBM ACE 
+license:
+  accepted: true
+  licenseID: L-XRNH-47FJAW
+  licenseUse: AppConnectEnterpriseProduction
+
+# Version of IBM App Connect Enterprise
+version: 12.0.12.4-r1
+
+# Port Service IBM Integration Runtime endpoint
+service:
+  port: 7800
+
+# Define Endpoints for Service App
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "4096m"
+  tls:
+    - hosts:
+      - dashboard-01-ir-app-http.vn
+  hosts:
+    - host:
+      paths:
+        - path: /private/customer/createCustomer/v1 
+          pathType: Prefix

@@ -1,0 +1,45 @@
+apiVersion: appconnect.ibm.com/v1beta1
+kind: Dashboard
+metadata:
+  labels:
+    backup.appconnect.ibm.com/component: dashboard
+    {{- include "ibm-ace-dashboard.labels" . | nindent 4 }}
+  {{- with .Values.integrationDashboardAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  name: {{ include "ibm-ace-dashboard.fullname" . }}
+spec:
+  license:
+    accept: {{ default "true" .Values.license.accepted }}
+    license: {{ default "L-XRNH-47FJAW" .Values.license.licenseID }}
+    use: {{ default "AppConnectEnterpriseProduction" .Values.license.licenseUse }}
+  pod:
+    containers:
+      content-server:
+        resources:
+        {{- toYaml .Values.resources.contentServer | nindent 10 }}
+      control-ui:
+        resources:
+        {{- toYaml .Values.resources.contentServer | nindent 10 }}
+    {{- with .Values.imagePullSecrets }}
+    imagePullSecrets:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  switchServer:
+    name: default
+  authentication:
+    integrationKeycloak:
+      enabled: {{ default "false" .Values.authentication.enabled }}
+  authorization:
+    integrationKeycloak:
+      enabled: {{ default "false" .Values.authorization.enabled }}
+  storage:
+    size: {{ default "5Gi" .Values.storage.size }}
+    type: {{ default "persistent-claim" .Values.storage.type }}
+    class: {{ default "efs-sc" .Values.storage.class }}
+  displayMode: {{ default "IntegrationRuntimes" .Values.displayMode }}
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ default 1 .Values.replicaCount }}
+  {{- end }}
+  version: {{ default "12.0.12.4-r1" .Values.version }}

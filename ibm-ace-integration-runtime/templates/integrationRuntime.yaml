@@ -1,0 +1,57 @@
+apiVersion: appconnect.ibm.com/v1beta1
+kind: IntegrationRuntime
+metadata:
+  labels:
+    backup.appconnect.ibm.com/component: integrationruntime
+    {{- include "ibm-ace-integration-runtime.labels" . | nindent 4 }}
+  {{- with .Values.integrationRuntimeAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  name: {{ include "ibm-ace-integration-runtime.fullname" . }}
+spec:
+  {{- with .Values.barURL }}
+  barURL:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .Values.barURL }}
+  configurations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  license:
+    accept: {{ default "true" .Values.license.accepted }}
+    license: {{ default "L-XRNH-47FJAW" .Values.license.licenseID }}
+    use: {{ default "AppConnectEnterpriseProduction" .Values.license.licenseUse }}
+  logFormat: {{ default "basic" .Values.logFormat }}
+  metrics:
+    disabled: {{ default "true" .Values.metrics }}
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ default 1 .Values.replicaCount }}
+  {{- end }}
+  flowType:
+    toolkitFlow: true
+  template:
+    spec:
+      containers:
+      - name: runtime
+        {{- with .Values.env }}
+        env:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        {{- with .Values.volumeMounts }}
+        volumeMounts:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  version: {{ default "12.0.12.4-r1" .Values.version }}
