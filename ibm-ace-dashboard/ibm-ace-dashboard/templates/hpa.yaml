@@ -1,17 +1,21 @@
 {{- if .Values.autoscaling.enabled }}
-apiVersion: autoscaling/v2
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "ibm-ace-dashboard.fullname" . }}
+  name: {{ include "ibm-ace-dashboard.fullname" . }}-hpa
   labels:
     {{- include "ibm-ace-dashboard.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
+    apiVersion: appconnect.ibm.com/v1beta1
+    kind: Dashboard
     name: {{ include "ibm-ace-dashboard.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  {{- with .Values.autoscaling.behavior }}
+  behavior:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
   metrics:
     {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
