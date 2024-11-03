@@ -1,0 +1,132 @@
+apiVersion: v1
+entries:
+  argo-cd:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: Set affinity in redis secret-init job.
+      artifacthub.io/signKey: |
+        fingerprint: 2B8F22F57260EFA67BE1C5824B11F800CD9D2252
+        url: https://argoproj.github.io/argo-helm/pgp_keys.asc
+    apiVersion: v2
+    appVersion: v2.12.4
+    created: "2024-11-03T19:57:25.381152217+07:00"
+    dependencies:
+    - condition: redis-ha.enabled
+      name: redis-ha
+      repository: https://dandydeveloper.github.io/charts/
+      version: 4.27.6
+    description: A Helm chart for Argo CD, a declarative, GitOps continuous delivery
+      tool for Kubernetes.
+    digest: 8191c3036a51d1b95ba79b8164f4abf605fb34898ac64310d1732ac1310f8fc7
+    home: https://github.com/argoproj/argo-helm
+    icon: https://argo-cd.readthedocs.io/en/stable/assets/logo.png
+    keywords:
+    - argoproj
+    - argocd
+    - gitops
+    kubeVersion: '>=1.25.0-0'
+    maintainers:
+    - name: argoproj
+      url: https://argoproj.github.io/
+    name: argo-cd
+    sources:
+    - https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+    - https://github.com/argoproj/argo-cd
+    urls:
+    - releases/argo-cd-7.6.8.tgz
+    version: 7.6.8
+  ibm-ace-dashboard:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-11-03T19:57:25.385151478+07:00"
+    description: A Helm chart for Kubernetes
+    digest: f2b06338e57e59c26df3d7048abf71c1cdb12ce92d439605737c2dddae8bebcd
+    name: ibm-ace-dashboard
+    type: application
+    urls:
+    - releases/ibm-ace-dashboard-0.1.0.tgz
+    version: 0.1.0
+  ibm-ace-integration-runtime:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-11-03T19:57:25.389181738+07:00"
+    description: A Helm chart for Kubernetes
+    digest: e7f840036d8d5bb27f06cebbcf4147bd1925552e5ae4b2f5a23ed8cc0d994938
+    name: ibm-ace-integration-runtime
+    type: application
+    urls:
+    - releases/ibm-ace-integration-runtime-0.1.0.tgz
+    version: 0.1.0
+  ibm-appconnect-operator:
+  - apiVersion: v2
+    appVersion: 12.2.0
+    created: "2024-11-03T19:57:25.406776966+07:00"
+    description: 'A chart to deploy the IBM App Connect Operator License By installing
+      this product you accept the following license terms: http://ibm.biz/acelicense.'
+    digest: c6ec55b72ef3a679074e5335a45c0a839b2935aa9cd87f06ebfedcc3adfc742f
+    icon: https://github.ibm.com/Cloud-Integration/ot4i-ace-docker/blob/main/app_connect_light_256x256.png
+    keywords:
+    - amd64
+    - Integration
+    - Commercial
+    - Limited
+    - IKS
+    - Middleware
+    maintainers:
+    - name: IBM
+    name: ibm-appconnect-operator
+    type: application
+    urls:
+    - releases/ibm-appconnect-operator-12.2.0.tgz
+    version: 12.2.0
+  ibm-mq:
+  - apiVersion: v2
+    appVersion: 9.3.5.0
+    created: "2024-11-03T19:57:25.412149114+07:00"
+    description: IBM MQ queue manager
+    digest: 34e2b6beff3ec42250b0c803b02f206371c0cb8c0a3748fa4371f2fb6ef18759
+    icon: https://raw.githubusercontent.com/IBM/charts/master/logo/ibm-mq-blue-icon.png
+    keywords:
+    - IBM MQ
+    - MQ
+    - amd64
+    - message queue
+    - Integration
+    kubeVersion: '>=1.18.0-0'
+    name: ibm-mq
+    type: application
+    urls:
+    - releases/ibm-mq-9.0.0.tgz
+    version: 9.0.0
+  ingress-nginx:
+  - annotations:
+      artifacthub.io/changes: |
+        - Update Ingress-Nginx version controller-v1.11.3
+      artifacthub.io/prerelease: "false"
+    apiVersion: v2
+    appVersion: 1.11.3
+    created: "2024-11-03T19:57:25.421472523+07:00"
+    description: Ingress controller for Kubernetes using NGINX as a reverse proxy
+      and load balancer
+    digest: 3bb99592a86df759b99cd67c2ae86474ebc4c985e9e845cbd605ab8749506576
+    home: https://github.com/kubernetes/ingress-nginx
+    icon: https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nginx_logo.svg/500px-Nginx_logo.svg.png
+    keywords:
+    - ingress
+    - nginx
+    kubeVersion: '>=1.21.0-0'
+    maintainers:
+    - name: cpanato
+    - name: Gacko
+    - name: puerco
+    - name: rikatz
+    - name: strongjz
+    - name: tao12345666333
+    name: ingress-nginx
+    sources:
+    - https://github.com/kubernetes/ingress-nginx
+    urls:
+    - releases/ingress-nginx-4.11.3.tgz
+    version: 4.11.3
+generated: "2024-11-03T19:57:25.361507109+07:00"
