@@ -1,0 +1,89 @@
+# IBM App Connect Operator Chart
+
+## Introduction
+
+The IBM App Connect Operator manages App Connect resources such as Dashboard, Designer Authoring, IntegrationRuntimes and SwitchServers
+
+## Chart Details
+
+This chart deploys a App Connect Operator Deployment into a namespace. The App Connect CRDs will be deployed from this chart if and only if a version of it does not already exist in the cluster.
+
+## Prerequisites
+
+- Helm v3
+- Kubernetes cluster '>=1.25.0 < 1.30.0'
+
+## Resources Required
+
+The App Connect Operator requires a minimum of
+
+```yaml
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+    ephemeral-storage: 50Mi
+  limits:
+    memory: 1Gi
+    ephemeral-storage: 512Mi
+```
+
+## Installing the Chart
+### Checking for previous installs
+
+```
+kubectl get crd | grep 'appconnect.ibm.com'
+```
+
+If you have found any crds with the previous command these will need upgrading and you can do that with the following command
+
+```
+for crd in crds/*; do; kubectl apply -f $crd; done
+```
+
+To install this chart, issue the following command:
+
+```
+helm install ibm-appconnect \
+    --set namespace="YOUR_NAMESPACE" \
+    .
+```
+
+See configuration section below for information regarding tuning your operator installation.
+
+## Uninstalling the Chart
+
+To uninstall this chart, issue the following command:
+
+```
+helm uninstall <name>
+```
+
+Due to [limitations](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/) in Helm, the Custom Resource Definitions (CRDs) are not deleted when the operator is uninstalled via Helm. To clean up the CRDs, issue the following commands:
+
+```bash
+kubectl delete crd/appconnect.ibm.com_configurations.yaml
+kubectl delete crd/appconnect.ibm.com_dashboards.yaml
+kubectl delete crd/appconnect.ibm.com_designerauthorings.yaml
+kubectl delete crd/appconnect.ibm.com_integrationruntimes.yaml
+kubectl delete crd/appconnect.ibm.com_integrationservers.yaml
+kubectl delete crd/appconnect.ibm.com_switchservers.yaml
+kubectl delete crd/appconnect.ibm.com_traces.yaml
+```
+
+**Warning:** Deleting the CRDs will cause all Custom Resource (CR) instances to also be deleted.
+
+## Configuration
+### Chart values
+{{ template "chart.valuesSection" . }}
+
+## Additional install parameters
+
+### Private registry
+```
+helm install ibm-appconnect \
+    --set namespace="YOUR NAMESPACE" \
+    --set operator.deployment.repository="dev.registry/fake" \
+    --set operator.privateRegistry="dev.registry/fake" \
+    .
+```

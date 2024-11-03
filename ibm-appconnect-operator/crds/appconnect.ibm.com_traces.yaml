@@ -1,0 +1,123 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.15.0
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/instance: ibm-appconnect
+    app.kubernetes.io/managed-by: ibm-appconnect
+    app.kubernetes.io/name: ibm-appconnect
+    app.kubernetes.io/namespace: system
+  name: traces.appconnect.ibm.com
+spec:
+  group: appconnect.ibm.com
+  names:
+    categories:
+    - all
+    - ace
+    - cp4i
+    - integration
+    kind: Trace
+    listKind: TraceList
+    plural: traces
+    singular: trace
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - jsonPath: .spec.type
+      name: TraceType
+      type: string
+    - jsonPath: .spec.integrationServerName
+      name: IntegrationServer
+      type: string
+    - jsonPath: .spec.integrationRuntimeName
+      name: IntegrationRuntime
+      type: string
+    - jsonPath: .status.phase
+      name: Status
+      type: string
+    name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: 'Documentation: For information about the installation parameters,
+          see https://ibm.biz/acetraceop. License: By installing this product you
+          accept the license terms https://ibm.biz/acelicense.'
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TraceSpec defines the desired state of Trace
+            properties:
+              integrationRuntimeName:
+                description: Name of the integration runtime to collect trace for.
+                type: string
+              integrationServerName:
+                description: Name of the integration server to collect trace for.
+                type: string
+              type:
+                description: Specify the type of trace.
+                type: string
+            required:
+            - type
+            type: object
+          status:
+            description: TraceStatus defines the observed state of Trace
+            properties:
+              conditions:
+                items:
+                  properties:
+                    lastTransitionTime:
+                      format: date-time
+                      type: string
+                    message:
+                      type: string
+                    reason:
+                      type: string
+                    status:
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - status
+                  - type
+                  type: object
+                type: array
+              phase:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: null
+  storedVersions: null

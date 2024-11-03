@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ibm-appconnect
+  labels:
+    app.kubernetes.io/instance: {{ template "ibm-appconnect.namespacedname" . }}
+    app.kubernetes.io/name: ibm-appconnect
+    app.kubernetes.io/managed-by: ibm-appconnect
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.operator.replicas }}
+  selector:
+    matchLabels:
+      name: ibm-appconnect
+      app.kubernetes.io/instance: {{ template "ibm-appconnect.namespacedname" . }}
+      app.kubernetes.io/name: ibm-appconnect
+      app.kubernetes.io/managed-by: ibm-appconnect
+  template:
+    metadata:
+      labels:
+        name: ibm-appconnect
+        app.kubernetes.io/instance: {{ template "ibm-appconnect.namespacedname" . }}
+        app.kubernetes.io/name: ibm-appconnect
+        app.kubernetes.io/managed-by: ibm-appconnect
+      annotations:
+        productName: "IBM App Connect Operator"
+        productID: "352089a4bd644eb0a61651413056f657"
+        productMetric: "FREE"
+        productChargedContainers: ""
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: "kubernetes.io/arch"
+                operator: In
+                values: ["amd64"]
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: {{ template "ibm-appconnect.namespacedname" . }}
+            app.kubernetes.io/name: ibm-appconnect
+            app.kubernetes.io/managed-by: ibm-appconnect
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      enableServiceLinks: false
+      serviceAccountName: ibm-appconnect
+      imagePullSecrets: 
+      {{- range .Values.operator.imagePullSecrets }}
+        - name: {{ . | indent 2}}
+      {{- end }}
+      containers:
+        - name: ibm-appconnect
+          ports:
+            - name: ready
+              containerPort: 5000
+              protocol: TCP
+            - name: pprof
+              containerPort: 6060
+              protocol: TCP
+            - containerPort: 8443
+              name: webhook-server
+              protocol: TCP
+          # Replace this with the built image name
+          image: {{ template "ibm-appconnect.image" . }}
+          command:
+            - /manager
+          args:
+            - --enable-leader-election
+          imagePullPolicy: {{ .Values.operator.deployment.pullPolicy }}
+          env:
+          {{- range $key, $val := .Values.operator.env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+          {{- end }}
+            - name: WATCH_NAMESPACE
+              value: {{ if eq .Values.operator.installMode "AllNamespaces" }}""{{ else }}{{ .Values.namespace }}{{ end }}
+            - name: HELM_OPERATOR_NAMESPACE
+              value: {{ .Values.namespace }}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OPERATOR_NAME
+              value: "ibm-appconnect"
+            - name: SKIP_WEBHOOK
+              value: "false"
+            - name: APPCONNECT_DEV_MODE
+              value: "false"
+            - name : HELM_INSTALL
+              value: "true"
+            {{- if .Values.operator.privateRegistry }}
+            - name : APPCONNECT_REGISTRY_OVERRIDE
+              value: {{ .Values.operator.privateRegistry }}
+            {{- end }}
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: 2
+              memory: "2Gi"
+          securityContext:
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: false
+            allowPrivilegeEscalation: false
+          livenessProbe:
+            httpGet:
+              path: /readyz
+              port: ready
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 10
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: ready
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /readyz
+              port: ready
+            failureThreshold: 30
+            periodSeconds: 10
+      securityContext:
+        runAsNonRoot: true
+      terminationGracePeriodSeconds: 10

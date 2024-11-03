@@ -1,0 +1,15 @@
+{{- if eq .Values.operator.installMode "OwnNamespace" }}
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: {{ template "ibm-appconnect.namespacedname" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app.kubernetes.io/instance: {{ template "ibm-appconnect.namespacedname" . }}
+    app.kubernetes.io/name: {{ template "ibm-appconnect.namespacedname" . }}
+    app.kubernetes.io/managed-by: ibm-appconnect
+rules:
+{{ $.Files.Get "static/role_rules.yaml" }}
+{{- end }}

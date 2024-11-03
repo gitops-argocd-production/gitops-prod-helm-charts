@@ -1,0 +1,17 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ibm-appconnect-{{ .Values.namespace }}
+  labels:
+    app.kubernetes.io/instance: {{ template "ibm-appconnect.namespacedname" . }}
+    app.kubernetes.io/name: {{ template "ibm-appconnect.namespacedname" . }}
+    app.kubernetes.io/managed-by: ibm-appconnect
+    app.kubernetes.io/namespace: {{ .Values.namespace }}
+subjects:
+- kind: ServiceAccount
+  name: ibm-appconnect
+  namespace: {{ .Values.namespace }}
+roleRef:
+  kind: ClusterRole
+  name: ibm-appconnect-{{ .Values.namespace }}
+  apiGroup: rbac.authorization.k8s.io

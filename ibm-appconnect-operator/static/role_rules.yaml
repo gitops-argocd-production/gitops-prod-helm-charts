@@ -1,0 +1,301 @@
+- apiGroups:
+    - ""
+  resources:
+    - configmaps
+    - persistentvolumeclaims
+    - secrets
+    - serviceaccounts
+    - serviceaccounts/finalizers
+    - services
+    - services/finalizers
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - endpoints
+    - events
+    - pods
+    - pods/log
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - namespaces
+  verbs:
+    - get
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - pods
+  verbs:
+    - get
+    - list
+    - patch
+    - watch
+- apiGroups:
+    - appconnect.ibm.com
+  resources:
+    - configurations
+    - dashboards
+    - designerauthorings
+    - integrationruntimes
+    - integrationservers
+    - switchservers
+    - traces
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - appconnect.ibm.com
+  resources:
+    - configurations/finalizers
+    - dashboards/finalizers
+    - designerauthorings/finalizers
+    - integrationruntimes/finalizers
+    - integrationservers/finalizers
+    - switchservers/finalizers
+    - traces/finalizers
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - appconnect.ibm.com
+  resources:
+    - configurations/status
+    - dashboards/status
+    - designerauthorings/status
+    - integrationruntimes/status
+    - integrationservers/status
+    - switchservers/status
+    - traces/status
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - apps
+  resources:
+    - daemonsets
+    - deployments
+    - replicasets
+    - statefulsets
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - apps
+  resourceNames:
+    - ibm-apponnect
+  resources:
+    - deployments/finalizers
+  verbs:
+    - update
+- apiGroups:
+    - batch
+  resources:
+    - cronjobs
+    - jobs
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - cert-manager.io
+  resources:
+    - certificates
+    - issuers
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
+- apiGroups:
+    - couchdb.databases.cloud.ibm.com
+  resources:
+    - couchdbclusters
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - cp4i.ibm.com
+  resources:
+    - cp4iservicesbindings
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
+- apiGroups:
+    - events.k8s.io
+  resources:
+    - events
+  verbs:
+    - create
+    - list
+    - watch
+- apiGroups:
+    - integration.ibm.com
+  resources:
+    - platformnavigators
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
+    - keycloak.integration.ibm.com
+  resources:
+    - integrationkeycloakclients
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
+- apiGroups:
+    - monitoring.coreos.com
+  resources:
+    - servicemonitors
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - watch
+- apiGroups:
+    - monitoringcontroller.cloud.ibm.com
+  resources:
+    - monitoringdashboards
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
+- apiGroups:
+    - networking.k8s.io
+  resources:
+    - ingresses
+    - networkpolicies
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - oidc.security.ibm.com
+  resources:
+    - clients
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - operator.ibm.com
+  resources:
+    - operandrequests
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
+- apiGroups:
+    - operators.coreos.com
+  resources:
+    - clusterserviceversions
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
+    - rbac.authorization.k8s.io
+  resources:
+    - rolebindings
+    - roles
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - route.openshift.io
+  resources:
+    - routes
+    - routes/custom-host
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- apiGroups:
+    - serving.knative.dev
+  resources:
+    - services
+  verbs:
+    - create
+    - delete
+    - get
+    - list
+    - update
+    - watch
